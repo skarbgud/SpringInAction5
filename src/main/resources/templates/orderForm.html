@@ -12,6 +12,11 @@
 
         <img th:src="@{/images/TacoCloud.png}"/>
         <a th:href="@{/design}" id="another">Design another taco</a><br/>
+        
+        <ul>
+        	<li th:each="taco : ${order.tacos}">
+        	<span>nth:text=${taco.name}"">taco anem</span></li>
+        </ul> 
 
         <div th:if="${#fields.hasErrors()}">
             <span class="validationError">
