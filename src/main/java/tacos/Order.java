@@ -44,7 +44,7 @@ public class Order {
 	private String deliveryzip;
 	
 	// 값이 있는지 확인, 입력 값이 유효한 신용 카드 번호인지 확인
-	@CreditCardNumber(message = "Not a valid credit card number")
+//	@CreditCardNumber(message = "Not a valid credit card number")
 	private String ccNumber;
 	
 	// MM/YY(두자리 수의 월과 연도 정규 표현식) 
