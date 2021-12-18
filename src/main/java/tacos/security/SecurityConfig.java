@@ -1,14 +1,23 @@
 package tacos.security;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import tacos.web.NoEncodingPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityConfig 클래스는 사용자의 HTTP 요청 경로에 대해 접근 제한과 같은 보안 관련 처리를 커스텀하게 가능하는 클래스이다. 
+public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityConfig 클래스는 사용자의 HTTP 요청 경로에 대해 접근 제한과 같은 보안 관련 처리를 커스텀하게 가능하는 클래스이다.
+	
+	@Autowired
+	DataSource dataSource;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -30,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 	// configure는 WebSecurityConfigurerAdapter에서 HTTP보안을 구성하는 메서드이다.
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		/*
 		auth.inMemoryAuthentication()
 			.withUser("user1")
 			.password("{noop}password1")
@@ -38,6 +48,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 			.withUser("user2")
 			.password("{noop}password2")
 			.authorities("ROLE_USER");
+		*/
+		
+		auth.jdbcAuthentication()
+			.dataSource(dataSource)
+			.usersByUsernameQuery(
+					"select username, password, enabled from users where username = ?"
+					)
+			.authoritiesByUsernameQuery(
+					"select username, authority from authorities where username = ?")
+//			.passwordEncoder(new BCryptPasswordEncoder()); // bcrypt를 해싱 암호화한다.
+			.passwordEncoder(new NoEncodingPasswordEncoder()); // 인코딩없이 반환하는 인코더로 변환
 	}
 	
 }
