@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.RequiredArgsConstructor;
 import tacos.data.UserRepository;
 
 @Controller
 @RequestMapping("/register")
+@RequiredArgsConstructor
 public class RegistrationController {
 	
 	private UserRepository userRepo;

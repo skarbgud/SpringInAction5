@@ -34,14 +34,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 	}
 	
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/design", "/orders")
-			.access("hasRole('ROLE_USER')")
-			.antMatchers("/", "/**").access("permitAll")
-			.and()
-			.httpBasic();
-	}
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+            .antMatchers("/design", "/orders")
+            .access("hasRole('ROLE_USER')")
+            .antMatchers("/", "/**").access("permitAll")
+            .and()
+            .formLogin()
+            .loginPage("/login")
+            .and()
+            .logout()
+            .logoutSuccessUrl("/")
+            .and()
+            .csrf();
+    }
 	
 	/*
 	 * 스프링 시큐리티에서 사용자 스토어를 구성하는 방법
