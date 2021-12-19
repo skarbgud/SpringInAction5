@@ -3,12 +3,15 @@ package tacos.security;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import tacos.web.NoEncodingPasswordEncoder;
 
@@ -16,8 +19,19 @@ import tacos.web.NoEncodingPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityConfig 클래스는 사용자의 HTTP 요청 경로에 대해 접근 제한과 같은 보안 관련 처리를 커스텀하게 가능하는 클래스이다.
 	
+	/*
 	@Autowired
 	DataSource dataSource;
+	*/
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	// PasswordEncoder의 빈을 주입해서 encoder() 메소드를 통해서 BCryptPasswordEncoder 인스턴스를 사용한다. 
+	@Bean
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -50,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 			.authorities("ROLE_USER");
 		*/
 		
+		/*
 		auth.jdbcAuthentication()
 			.dataSource(dataSource)
 			.usersByUsernameQuery(
@@ -59,6 +74,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 					"select username, authority from authorities where username = ?")
 //			.passwordEncoder(new BCryptPasswordEncoder()); // bcrypt를 해싱 암호화한다.
 			.passwordEncoder(new NoEncodingPasswordEncoder()); // 인코딩없이 반환하는 인코더로 변환
+		*/
+
+		/*
+		auth.ldapAuthentication()
+			.userSearchBase("ou=people")
+			.userSearchFilter("(uid={0})")
+			.groupSearchBase("ou=groups")
+			.groupSearchFilter("member={0}")
+			.contextSource()
+			.root("dc=tacocloud,dc=com")
+			.ldif("classpath:user.ldif")
+			.and()
+			.passwordCompare()
+			.passwordEncoder(new BCryptPasswordEncoder())
+			.passwordAttribute("userPasswordcode");
+		*/
+		
+		auth.userDetailsService(userDetailsService)
+			.passwordEncoder(encoder()); // encoder의 BCryptPasswordEncoder 인스턴스가 스프링 애플리케이션 컨텍스트에 등록, 관리되며, 이 인스턴스가 애플리케이션 컨텍스트로 부터 주입되어 반환한다.
 	}
 	
 }
