@@ -1,7 +1,5 @@
 package tacos.security;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import tacos.web.NoEncodingPasswordEncoder;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityConfig 클래스는 사용자의 HTTP 요청 경로에 대해 접근 제한과 같은 보안 관련 처리를 커스텀하게 가능하는 클래스이다.
 	
 	/*
@@ -36,17 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/design", "/orders")
-            .access("hasRole('ROLE_USER')")
-            .antMatchers("/", "/**").access("permitAll")
-            .and()
-            .formLogin()
-            .loginPage("/login")
-            .and()
-            .logout()
-            .logoutSuccessUrl("/")
-            .and()
-            .csrf();
+	        .antMatchers("/design", "/orders")
+	        .access("hasRole('ROLE_USER')")
+	        .antMatchers("/", "/**").access("permitAll")
+	        .and()
+	        .formLogin()
+	        .loginPage("/login")
+	        .and()
+	        .logout()
+	        .logoutSuccessUrl("/")
+	        .and()
+	        .csrf();
     }
 	
 	/*
@@ -97,8 +96,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // SecurityCo
 			.passwordAttribute("userPasswordcode");
 		*/
 		
-		auth.userDetailsService(userDetailsService)
-			.passwordEncoder(encoder()); // encoder의 BCryptPasswordEncoder 인스턴스가 스프링 애플리케이션 컨텍스트에 등록, 관리되며, 이 인스턴스가 애플리케이션 컨텍스트로 부터 주입되어 반환한다.
+		 auth.userDetailsService(userDetailsService)
+		 	 .passwordEncoder(encoder()); // encoder의 BCryptPasswordEncoder 인스턴스가 스프링 애플리케이션 컨텍스트에 등록, 관리되며, 이 인스턴스가 애플리케이션 컨텍스트로 부터 주입되어 반환한다.
 	}
 	
 }

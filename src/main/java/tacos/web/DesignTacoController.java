@@ -1,5 +1,6 @@
 package tacos.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +22,10 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
 import tacos.Taco;
+import tacos.User;
 import tacos.data.IngredientRepository;
 import tacos.data.TacoRepository;
+import tacos.data.UserRepository;
 
 @Slf4j // lombok 제공 Logger 생성 => private static final org.slf4j.Loggger log = org.slf4j.LoggerFactory.getLogger(DesignTacoController.class);
 @Controller // Controller 컴포넌트 => 스프링 애플리케이션 컨텍스트의 빈으로 이 클래스 인스턴스 자동 생성
@@ -32,15 +35,17 @@ public class DesignTacoController {
 	
 	private final IngredientRepository ingredientRepo;
 	private final TacoRepository tacoRepo;
+	private final UserRepository userRepo;
 	
 	@Autowired
-	public DesignTacoController (IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
+	public DesignTacoController (IngredientRepository ingredientRepo, TacoRepository tacoRepo, UserRepository userRepo) {
 		this.ingredientRepo = ingredientRepo;
 		this.tacoRepo = tacoRepo;
+		this.userRepo = userRepo;
 	}
 	
 	@GetMapping // == RequestMapping(method=RequestMethod.GET)
-	public String showDesignForm(Model model)
+	public String showDesignForm(Model model, Principal principal)
 	{
 		/*
 		List<Ingredient> ingredients = Arrays.asList(
@@ -66,7 +71,11 @@ public class DesignTacoController {
 			model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
 		}
 		
-		model.addAttribute("taco", new Taco());
+//		model.addAttribute("taco", new Taco());
+		
+		String username = principal.getName();
+		User user = userRepo.findByUsername(username);
+		model.addAttribute("user", user);
 		
 		return "design";
 	}
