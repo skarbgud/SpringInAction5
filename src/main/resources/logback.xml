@@ -1,0 +1,13 @@
+<configuration>
+	<appender name ="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+			 [LOG] 시간: %d{HH:mm:ss.SSS} 쓰레드: [%thread] 로그레벨: %-5level logger: %logger{36} - 메세지: %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<logger name="root" level="INFO" />
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
