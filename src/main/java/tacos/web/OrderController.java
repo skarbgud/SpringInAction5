@@ -25,19 +25,22 @@ import tacos.data.OrderRepository;
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("order")
-@ConfigurationProperties(prefix = "taco.orders") // pageSize 구성 속성 값을 설정할때는 taco.orders.pageSize라는 이름을 사용해야 한다.
+//@ConfigurationProperties(prefix = "taco.orders") // pageSize 구성 속성 값을 설정할때는 taco.orders.pageSize라는 이름을 사용해야 한다.
 public class OrderController {
 	
-	private int pageSize = 20;
+//	private int pageSize = 20;
 	
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+//	public void setPageSize(int pageSize) {
+//		this.pageSize = pageSize;
+//	}
+	
+	private OrderProps props;
 
 	private OrderRepository orderRepo;
 	
-	public OrderController(OrderRepository orderRepo) {
+	public OrderController(OrderRepository orderRepo, OrderProps props) {
 		this.orderRepo = orderRepo;
+		this.props = props;
 	}
 	
 	@GetMapping("/current")
@@ -82,7 +85,7 @@ public class OrderController {
 //		model.addAttribute("orders", orderRepo.findByUserOrderByPlacedAtDesc(user));
 		
 		// 최근 20개 주문만 페이징 처리
-		Pageable pageable = PageRequest.of(0, 20);
+		Pageable pageable = PageRequest.of(0, props.getPageSize());
 		model.addAttribute("orders", orderRepo.findByUserOrderByPlacedAtDesc(user, pageable));
 		
 		return "orderList";
