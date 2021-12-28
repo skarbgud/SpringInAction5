@@ -16,6 +16,8 @@ public class TacoCloudApplication {
 	}
 
 	@Bean
+//  @Profile({"dev", "qa"})
+//  @Profile({"!prod", "qa"})
 	public CommandLineRunner dataLoader(IngredientRepository repo) {
 		return new CommandLineRunner() {
 			

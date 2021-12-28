@@ -58,8 +58,8 @@ public class OrderController {
 		if (order.getDeliveryState() == null) {
 			order.setDeliveryState(user.getState());
 		}
-		if (order.getDeliveryzip() == null) {
-			order.setDeliveryzip(user.getZip());
+		if (order.getDeliveryZip() == null) {
+			order.setDeliveryZip(user.getZip());
 		}
 		
 //		model.addAttribute("order", new Order());

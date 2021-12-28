@@ -58,8 +58,8 @@ public class Order implements Serializable {
 	@NotBlank(message = "State is required")
 	private String deliveryState;
 	
-	@NotBlank(message = "Zip code is required")
-	private String deliveryzip;
+    @NotBlank(message = "Zip code is required")
+    private String deliveryZip;
 	
 	// 값이 있는지 확인, 입력 값이 유효한 신용 카드 번호인지 확인
 //	@CreditCardNumber(message = "Not a valid credit card number")
