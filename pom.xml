@@ -91,6 +91,13 @@
 			<artifactId>spring-security-test</artifactId>
 		</dependency>
 		
+		<!-- @ConfigurationProperties 애노테이션이 지정된 애플리케이션 클래스에 관한 메타데이터를 생성하는 애노테이션 처리기 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
 		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-ldap</artifactId>
