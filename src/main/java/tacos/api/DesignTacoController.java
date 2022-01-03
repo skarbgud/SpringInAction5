@@ -1,13 +1,13 @@
 package tacos.api;
 
-import java.util.Optional;
+import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tacos.Taco;
 import tacos.data.TacoRepository;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "/design", produces = "application/json") // 요청 Accept 헤더에 application/json 요청만 처리
@@ -35,9 +38,14 @@ public class DesignTacoController {
 //	EntityLinks entityLinks;
 	
 	@GetMapping("/recent")
-	public Iterable<Taco> recentTaco() {
+	public CollectionModel<TacoResource> recentTacos() {
 		PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-		return tacoRepo.findAll(page).getContent();
+		List<Taco> tacos = tacoRepo.findAll(page).getContent();
+		
+		CollectionModel<TacoResource> TacoResources = new TacoResourceAssembler().toCollectionModel(tacos);
+		TacoResources.add(linkTo(methodOn(DesignTacoController.class).recentTacos()).withRel("recents"));
+		
+		return tacoResources;
 	}
 	
 	@GetMapping("/{id}")
