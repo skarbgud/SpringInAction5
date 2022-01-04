@@ -12,10 +12,13 @@ import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.data.rest.core.annotation.RestResource;
+
 import lombok.Data;
 
 @Data
 @Entity
+@RestResource(rel="tacos", path="tacos") // 복수형으로 인한 문제 -> 관계 이름과 경로 변경
 public class Taco {
 	
 	@Id
