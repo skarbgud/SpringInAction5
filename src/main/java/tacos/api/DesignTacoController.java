@@ -36,14 +36,15 @@ public class DesignTacoController {
 	
 //	@Autowired
 //	EntityLinks entityLinks;
-	
+	 
 	@GetMapping("/recent")
 	public CollectionModel<TacoResource> recentTacos() {
 		PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
 		List<Taco> tacos = tacoRepo.findAll(page).getContent();
 		
-		CollectionModel<TacoResource> TacoResources = new TacoResourceAssembler().toCollectionModel(tacos);
-		TacoResources.add(linkTo(methodOn(DesignTacoController.class).recentTacos()).withRel("recents"));
+		CollectionModel<TacoResource> tacoResources = new TacoResourceAssembler().toCollectionModel(tacos);
+		// linkTo=>/ , methodOn=>컨트롤러를 인자로 받아 recentTacos()를 호출할 수 있게 해준다.
+		tacoResources.add(linkTo(methodOn(DesignTacoController.class).recentTacos()).withRel("recents"));
 		
 		return tacoResources;
 	}
