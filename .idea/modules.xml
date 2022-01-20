@@ -15,6 +15,7 @@
       <module fileurl="file://$PROJECT_DIR$/tacocloud-security/tacocloud-security.iml" filepath="$PROJECT_DIR$/tacocloud-security/tacocloud-security.iml" />
       <module fileurl="file://$PROJECT_DIR$/tacocloud-ui/tacocloud-ui.iml" filepath="$PROJECT_DIR$/tacocloud-ui/tacocloud-ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/tacocloud-web/tacocloud-web.iml" filepath="$PROJECT_DIR$/tacocloud-web/tacocloud-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.mvn/wrapper/wrapper.iml" filepath="$PROJECT_DIR$/.mvn/wrapper/wrapper.iml" />
     </modules>
   </component>
 </project>
