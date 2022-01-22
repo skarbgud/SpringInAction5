@@ -78,13 +78,11 @@ public class JmsOrderMessagingService implements OrderMessagingService {
        -> convertAndSend()의 마지막 인자로 MessagePostProcessor를 전달하면 Message 객체가 생성된 후 이 객체가 생성된 후 필요한 처리를 할 수 있다.
        MessagePostProcessor()를 사용해서 메세지가 전송되기 전에 X_ORDER_SOURCE 헤더에 'WEB'을 추가한다.
        */
-      jms.convertAndSend("tacocloud.order.queue", order, new MessagePostProcessor() {
-          @Override
-          public Message postProcessMessage(Message message) throws JMSException {
-              message.setStringProperty("X_ORDER_SOURCE", "WEB");
-              return message;
-          }
-      });
+      jms.convertAndSend("tacocloud.order.queue", order,
+              message -> {
+                  message.setStringProperty("X_ORDER_SOURCE", "WEB");
+                  return message;
+              });
   }
 
   private Message addOrderSource(Message message) throws JMSException {
