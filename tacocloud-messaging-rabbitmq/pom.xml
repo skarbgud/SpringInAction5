@@ -30,6 +30,7 @@
 			<version>${tacocloud.version}</version>
 		</dependency>
 
+		<!-- Rabbit MQ의 의존성 추가  -->
 		<!-- Necessary Boot starters -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
