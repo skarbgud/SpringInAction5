@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class JmsOrderMessagingService implements OrderMessagingService {
 //    return new ActiveMQQueue("tacocloud.order.queue");
 //  }
 
+  /*
   public MappingJackson2MessageConverter messageConverter() {
     MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
     // 이 메세지 변환기의 인스턴스를 반환. 수신된 메세지의 변환 타입을 메세지 수신자가 알아야 하기 때문에 이 부분이 중요하다.
@@ -41,6 +43,7 @@ public class JmsOrderMessagingService implements OrderMessagingService {
     
     return messageConverter;
   }
+   */
 
 //  private Destination orderQueue;
 
@@ -68,9 +71,22 @@ public class JmsOrderMessagingService implements OrderMessagingService {
     // 메세지 변환하고 전송하기(p.267) -> MessageCreator를 제공하지 않아도 되므로 메세지 전송이 더 간단해진다. (Order 객체는 Message 객체로 변한된 후 전송된다.)
     // MessageConverter 인터페이스 -> [SimpleMessageConverter 클래스]
     // 하지만 이 경우 전송될 객체가 Serializable(직렬화) 인터페이스를 구현하는 것이어야 한다. (이를 피하기 위해 MappingJackson2MessageConverter와 같은 다른 메세지 변환기를 사용할 수도 있다.) [p.268 하단 참조]
-    jms.convertAndSend("tacocloud.order.queue", messageConverter());
+//    jms.convertAndSend("tacocloud.order.queue", messageConverter());
+
+      /*
+       Message 객체를 전송 전에 변경하는 방법
+       -> convertAndSend()의 마지막 인자로 MessagePostProcessor를 전달하면 Message 객체가 생성된 후 이 객체가 생성된 후 필요한 처리를 할 수 있다.
+       MessagePostProcessor()를 사용해서 메세지가 전송되기 전에 X_ORDER_SOURCE 헤더에 'WEB'을 추가한다.
+       */
+      jms.convertAndSend("tacocloud.order.queue", order, new MessagePostProcessor() {
+          @Override
+          public Message postProcessMessage(Message message) throws JMSException {
+              message.setStringProperty("X_ORDER_SOURCE", "WEB");
+              return message;
+          }
+      });
   }
-  
+
   private Message addOrderSource(Message message) throws JMSException {
     message.setStringProperty("X_ORDER_SOURCE", "WEB");
     return message;
