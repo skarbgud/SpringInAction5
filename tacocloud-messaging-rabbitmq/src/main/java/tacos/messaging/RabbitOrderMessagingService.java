@@ -23,11 +23,7 @@ public class RabbitOrderMessagingService
   }
   
   public void sendOrder(Order order) {
-      MessageConverter converter = rabbit.getMessageConverter();
-      MessageProperties props = new MessageProperties();
-      // MessageConverter 로 Order 객체를 Message 객체로 변환하여 send()로 전송
-      Message message = converter.toMessage(order, props);
-      // 라우팅 키 => tacocloud.order [기본 거래소 사용]
-      rabbit.send("tacocloud.order", message);
+    // 객체로부터 전환된 메세지를 전송한다.
+    rabbit.convertAndSend("tacocloud.order", order);
   }
 }
