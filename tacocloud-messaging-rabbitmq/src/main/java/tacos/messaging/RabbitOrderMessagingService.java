@@ -30,11 +30,16 @@ public class RabbitOrderMessagingService
   }
   
   public void sendOrder(Order order) {
-    MessageConverter converter = rabbit.getMessageConverter();
-    MessageProperties props = new MessageProperties();
-    // JMS처럼 MessageProperties 인스턴스를 통해 헤더를 설정 할 수 있다
-    props.setHeader("X_ORDER_SOURCE", "WEB");
-    Message message = converter.toMessage(order, props);
-    rabbit.send("tacocloud.order", message);
+    // convertAndSend 를 사용할 경우 MessageProperties 객체를 직접 사용 할 수 없으므로 MessagePostProcessor 를 사용해야한다.
+    rabbit.convertAndSend("tacocloud.order.queue", order,
+            new MessagePostProcessor() {  // MessagePostProcessor 를  구현한 내부 클래스 인스턴스를 convertAndSend 인자로 전달
+              @Override
+              public Message postProcessMessage(Message message) throws AmqpException {
+                // Message 객체의 MessageProperties 를 가져온 후 setHeader()를 호출하여 X_ORDER_SOURCE 헤더를 설정한다.
+                MessageProperties props = message.getMessageProperties();
+                props.setHeader("X_ORDER_SOURCE", "WEB");
+                return message;
+              }
+            });
   }
 }
