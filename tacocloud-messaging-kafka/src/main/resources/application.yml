@@ -7,3 +7,6 @@ spring:
 #    - kafaka.tacocloud.com:9092
 #    - kafaka.tacocloud.com:9093
 #    - kafaka.tacocloud.com:9094
+#  spring.kafaka.template.defulat-topic 속성에 tacocloud.orders.topic을 기본 토픽을 설정 할 수 있다.
+    template:
+      default-topic: tacocloud.orders.topic
